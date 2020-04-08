@@ -21,12 +21,11 @@ amp_trasp = _ <: ch_1,ch_2,ch_3,ch_4
     g2group(x) = hgroup("[02]gain2", x);
     g3group(x) = hgroup("[02]gain3", x);
     g4group(x) = hgroup("[02]gain4", x);
-    meter1(x) = attach(x, envelop(x) : vbargraph("[02]METER1[unit:dB]", -96, +12));
-    meter2(x) = attach(x, envelop(x) : vbargraph("[02]METER2[unit:dB]", -96, +12));
-    meter3(x) = attach(x, envelop(x) : vbargraph("[02]METER3[unit:dB]", -96, +12));
-    meter4(x) = attach(x, envelop(x) : vbargraph("[02]METER4[unit:dB]", -96, +12));
+    meter1(x) = attach(x, an.amp_follower(0.150, x) : ba.linear2db : vbargraph("[02]METER1[unit:dB]", -96, +12));
+    meter2(x) = attach(x, an.amp_follower(0.150, x) : ba.linear2db : vbargraph("[02]METER2[unit:dB]", -96, +12));
+    meter3(x) = attach(x, an.amp_follower(0.150, x) : ba.linear2db :vbargraph("[02]METER3[unit:dB]", -96, +12));
+    meter4(x) = attach(x, an.amp_follower(0.150, x) : ba.linear2db :vbargraph("[02]METER4[unit:dB]", -96, +12));
 
-    envelop = abs : max ~ -(6/ma.SR) : max(ba.db2linear(-96)) : ba.linear2db;
     maxdel = ma.SR;
 
     del1 = ch1group(pm.l2s(nentry("[03]METERS", 0,0,50,0.1)));
@@ -231,3 +230,6 @@ pgm3 = _ * pgm3group(mute) : rev : ch_1,ch_2
         };
 
 process = hgroup("post-prae-ludium per Donau", input <: amp_trasp, pgm1, pgm2, pgm3, pgm4) :> _,_,_,_;
+
+
+//tgroup("PANELS", microphones :> hgroup("[03] MAIN", input : main)
